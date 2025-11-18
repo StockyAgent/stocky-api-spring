@@ -1,0 +1,33 @@
+### Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### IDE - IntelliJ ###
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+### IDE - VSCode ###
+.vscode/
+*.code-workspace
+
+### Environment & Sensitive Files ###
+.env
+*.env
+application-local.yml
+application-dev.yml
+application-prod.yml
+
+### Database ###
+*.db
+*.sqlite
+
+### Logs ###
+*.log
+
+### OS ###
+.DS_Store
+Thumbs.db
