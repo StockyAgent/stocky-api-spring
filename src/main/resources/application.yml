@@ -1,12 +1,32 @@
 spring:
+
   application:
     name: stocky-api-spring
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+
+# JWT 설정 (커스텀 설정)
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: 3600000      # 1시간 (밀리초)
+  refresh-token-expiration: 1209600000  # 14일 (밀리초)
