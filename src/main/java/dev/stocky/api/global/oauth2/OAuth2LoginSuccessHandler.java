@@ -24,7 +24,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
   private final JwtTokenProvider jwtTokenProvider;
   private final CookieUtil cookieUtil;
 
-  // 프론트엔드 리다이렉트 URI (todo: 나중에 YML에서 가져오도록 리팩토링)
+  // 프론트엔드 리다이렉트 URI (todo: 나중에 application.yml 또는 application-prod.yml에서 가져오도록 리팩토링)
   private static final String REDIRECT_URI = "http://localhost:3000/oauth/callback";
 
   @Override
