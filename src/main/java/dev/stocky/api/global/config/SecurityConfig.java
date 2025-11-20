@@ -39,11 +39,12 @@ public class SecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/error")
-            .permitAll()
-            .requestMatchers("/login/**", "/oauth2/**").permitAll()
-            .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
-            .anyRequest().authenticated()
+                .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/error")
+                .permitAll()
+                .requestMatchers("/login/**", "/oauth2/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+//            .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name()) // 관리자 권한이 필요한 경로 예시
+                .anyRequest().authenticated()
         )
 
         .oauth2Login(oauth2 -> oauth2
