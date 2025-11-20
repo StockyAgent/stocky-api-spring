@@ -2,8 +2,8 @@ package dev.stocky.api.global.oauth2;
 
 import dev.stocky.api.domain.user.Role;
 import dev.stocky.api.global.jwt.JwtTokenProvider;
+import dev.stocky.api.global.util.CookieUtil;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
   private final JwtTokenProvider jwtTokenProvider;
+  private final CookieUtil cookieUtil;
 
   // 프론트엔드 리다이렉트 URI (todo: 나중에 YML에서 가져오도록 리팩토링)
   private static final String REDIRECT_URI = "http://localhost:3000/oauth/callback";
@@ -44,7 +45,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     String refreshToken = jwtTokenProvider.createRefreshToken(email);
 
     // 2. 리프레시 토큰을 쿠키에 저장
-    addRefreshTokenCookie(response, refreshToken);
+    cookieUtil.addRefreshTokenCookie(response, refreshToken);
 
     // 3. 액세스 토큰만 쿼리 파라미터로 전달하여 리다이렉트
     String targetUrl = UriComponentsBuilder.fromUriString(REDIRECT_URI)
@@ -54,17 +55,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         .toUriString();
 
     response.sendRedirect(targetUrl);
-  }
-
-  // 쿠키 생성 메서드
-  private void addRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
-    Cookie cookie = new Cookie("refresh_token", refreshToken);
-    cookie.setHttpOnly(true); // 자바스크립트에서 접근 불가
-    cookie.setSecure(true); // HTTPS에서만 사용 (로컬 테스트 시 false 설정 혹은 ngrok 사용)
-    cookie.setPath("/"); // 모든 경로에서 접근 가능
-    cookie.setMaxAge(14 * 24 * 60 * 60); // 2주
-
-    response.addCookie(cookie);
   }
 
 }
