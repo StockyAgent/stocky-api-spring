@@ -66,5 +66,13 @@ public class AuthController {
     return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
   }
 
+  @PostMapping("/logout")
+  public ResponseEntity<?> logout(HttpServletResponse response) {
+    // 쿠키 삭제 (MaxAge를 0으로 덮어쓰기)
+    cookieUtil.deleteRefreshTokenCookie(response);
+
+    return ResponseEntity.ok("로그아웃 되었습니다.");
+  }
+
 
 }
