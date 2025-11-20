@@ -7,12 +7,14 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @Component
@@ -39,25 +41,29 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     // 1. 토큰 생성
     String accessToken = jwtTokenProvider.createAccessToken(email, role);
-    // String refreshToken = jwtTokenProvider.createRefreshToken(email); // (구현 필요)
+    String refreshToken = jwtTokenProvider.createRefreshToken(email);
 
-    // 2. 리프레시 토큰 쿠키에 저장 (HttpOnly) - 지금은 생략하고 액세스 토큰만 전달 예시
-    // addRefreshTokenCookie(response, refreshToken);
+    // 2. 리프레시 토큰을 쿠키에 저장
+    addRefreshTokenCookie(response, refreshToken);
 
-    // 3. 프론트엔드로 리다이렉트 (Access Token을 쿼리 파라미터로 전달)
-    // 프론트에서는 이 URL을 라우팅해서 토큰을 꺼내 로컬 스토리지에 저장해야 함
-    String targetUrl = REDIRECT_URI + "?accessToken=" + accessToken;
+    // 3. 액세스 토큰만 쿼리 파라미터로 전달하여 리다이렉트
+    String targetUrl = UriComponentsBuilder.fromUriString(REDIRECT_URI)
+        .queryParam("accessToken", accessToken)
+        .build()
+        .encode(StandardCharsets.UTF_8)
+        .toUriString();
 
     response.sendRedirect(targetUrl);
   }
 
-  // 쿠키 생성 헬퍼 메서드 (참고용)
+  // 쿠키 생성 메서드
   private void addRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
     Cookie cookie = new Cookie("refresh_token", refreshToken);
-    cookie.setHttpOnly(true);
-    cookie.setSecure(true); // HTTPS에서만 사용
-    cookie.setPath("/");
+    cookie.setHttpOnly(true); // 자바스크립트에서 접근 불가
+    cookie.setSecure(true); // HTTPS에서만 사용 (로컬 테스트 시 false 설정 혹은 ngrok 사용)
+    cookie.setPath("/"); // 모든 경로에서 접근 가능
     cookie.setMaxAge(14 * 24 * 60 * 60); // 2주
+
     response.addCookie(cookie);
   }
 

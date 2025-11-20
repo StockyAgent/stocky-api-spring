@@ -16,6 +16,9 @@ public class JwtTokenProvider {
   private final Key key;
   private final long accessTokenValidityInMilliseconds;
 
+  @Value("${jwt.refresh-token-expiration}")
+  private long refreshTokenValidityInMilliseconds;
+
   // application.yml에서 설정한 값을 가져오기
   public JwtTokenProvider(
       @Value("${jwt.secret}") String secretKey,
@@ -26,7 +29,7 @@ public class JwtTokenProvider {
     this.accessTokenValidityInMilliseconds = accessTokenValidityInMilliseconds;
   }
 
-  // 1. Access Token 생성
+  // Access Token 생성
   public String createAccessToken(String email, String role) {
     Claims claims = Jwts.claims().setSubject(email); // 토큰 제목에 이메일 설정
     claims.put("role", role); // 추가 클레임에 역할 설정
@@ -42,7 +45,22 @@ public class JwtTokenProvider {
         .compact();
   }
 
-  // 2. 토큰에서 이메일 추출
+  // Refresh Token 생성
+  public String createRefreshToken(String email) {
+    Claims claims = Jwts.claims().setSubject(email);
+
+    Date now = new Date();
+    Date validity = new Date(now.getTime() + refreshTokenValidityInMilliseconds);
+
+    return Jwts.builder()
+        .setClaims(claims)
+        .setIssuedAt(now)
+        .setExpiration(validity)
+        .signWith(key, SignatureAlgorithm.HS256)
+        .compact();
+  }
+
+  // 토큰에서 이메일 추출
   public String getEmailFromToken(String token) {
     return Jwts.parserBuilder()
         .setSigningKey(key)
@@ -52,7 +70,7 @@ public class JwtTokenProvider {
         .getSubject();
   }
 
-  // 3. 토큰 유효성 검사
+  // 토큰 유효성 검사
   public boolean validateToken(String token) {
     try {
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -83,5 +101,5 @@ public class JwtTokenProvider {
     }
   }
 
-  
+
 }
