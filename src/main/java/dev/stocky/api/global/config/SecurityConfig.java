@@ -3,6 +3,8 @@ package dev.stocky.api.global.config;
 import dev.stocky.api.domain.user.Role;
 import dev.stocky.api.global.jwt.JwtAuthenticationFilter;
 import dev.stocky.api.global.jwt.JwtTokenProvider;
+import dev.stocky.api.global.oauth2.CustomOAuth2UserService;
+import dev.stocky.api.global.oauth2.OAuth2LoginSuccessHandler;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
   private final JwtTokenProvider jwtTokenProvider;
+  private final CustomOAuth2UserService customOAuth2UserService;
+  private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,10 +46,10 @@ public class SecurityConfig {
             .anyRequest().authenticated()
         )
 
-//        .oauth2Login(oauth2 -> oauth2
-//            // .successHandler(...) // 곧 추가할 예정
-//            // .userInfoEndpoint(...) // 곧 추가할 예정
-//        )
+        .oauth2Login(oauth2 -> oauth2
+            .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+            .successHandler(oAuth2LoginSuccessHandler)
+        )
 
         .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
             UsernamePasswordAuthenticationFilter.class);
