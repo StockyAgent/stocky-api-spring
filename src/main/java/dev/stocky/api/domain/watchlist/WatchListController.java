@@ -22,19 +22,19 @@ public class WatchListController {
   // 관심 종목 목록 동기화 (등록/수정/삭제 통합)
   @PutMapping
   public ResponseEntity<String> syncWatchList(
-      @AuthenticationPrincipal UserDetails userDetails,
+      @AuthenticationPrincipal String email,
       @RequestBody WatchListRequestDto requestDto
   ) {
-    watchListService.syncWatchList(userDetails.getUsername(), requestDto);
+    watchListService.syncWatchList(email, requestDto);
     return ResponseEntity.ok("관심 종목이 업데이트되었습니다.");
   }
 
   // 내 관심 종목 조회
   @GetMapping
   public ResponseEntity<WatchListResponseDto> getWatchList(
-      @AuthenticationPrincipal UserDetails userDetails
+      @AuthenticationPrincipal String email
   ) {
-    WatchListResponseDto response = watchListService.getWatchlist(userDetails.getUsername());
+    WatchListResponseDto response = watchListService.getWatchlist(email);
     return ResponseEntity.ok(response);
   }
 }

@@ -20,30 +20,30 @@ public class UserController {
 
   // 1. 내 정보 조회
   @GetMapping("/me")
-  public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal UserDetails userDetails) {
+  public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal String email) {
     // UserDetails에는 이메일(username)이 들어있음
-    UserResponseDto userInfo = userService.getMyInfo(userDetails.getUsername());
+    UserResponseDto userInfo = userService.getMyInfo(email);
     return ResponseEntity.ok(userInfo);
   }
 
   // 2. 내 정보 수정 (예: 닉네임 변경)
   @PatchMapping("/me")
   public ResponseEntity<?> updateMyInfo(
-      @AuthenticationPrincipal UserDetails userDetails,
+      @AuthenticationPrincipal String email,
       @RequestBody UserUpdateDto updateDto
   ) {
-    userService.updateMyInfo(userDetails.getUsername(), updateDto);
+    userService.updateMyInfo(email, updateDto);
     return ResponseEntity.ok("정보가 수정되었습니다.");
   }
 
   // 3. 회원 탈퇴
   @DeleteMapping("/me")
   public ResponseEntity<?> withdraw(
-      @AuthenticationPrincipal UserDetails userDetails,
+      @AuthenticationPrincipal String email,
       HttpServletResponse response
   ) {
     // DB에서 삭제
-    userService.withdraw(userDetails.getUsername());
+    userService.withdraw(email);
 
     // 리프레시 토큰 쿠키도 같이 삭제해줘야 완벽한 탈퇴!
     cookieUtil.deleteRefreshTokenCookie(response);
