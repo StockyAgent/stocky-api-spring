@@ -1,5 +1,6 @@
 package dev.stocky.api.domain.watchlist.dto;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,7 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WatchListRequestDto {
 
-  private String figi; // 주식의 FIGI
-  private String name; // 주식 이름
+  // 관심 종목 리스트
+  private List<StockItem> stocks;
+
+  @Getter
+  @NoArgsConstructor
+  public static class StockItem {
+
+    private String figi;
+    private String name;
+  }
 
 }
