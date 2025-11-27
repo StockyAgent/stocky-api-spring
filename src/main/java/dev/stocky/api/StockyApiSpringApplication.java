@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class StockyApiSpringApplication {
 
   public static void main(String[] args) {
+
+    System.setProperty("aws.region", "ap-northeast-2"); // todo: 환경변수로 변경
+
     SpringApplication.run(StockyApiSpringApplication.class, args);
   }
 
