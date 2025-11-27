@@ -28,18 +28,29 @@ public class User {
   @Column
   private String provider; // google, naver 등 (확장성 고려)
 
+  @Enumerated(EnumType.STRING)
+  @Column
+  private InvestmentStyle investmentStyle;
+
   @Builder
-  public User(String email, String name, Role role, String provider) {
+  public User(String email, String name, Role role, String provider,
+      InvestmentStyle investmentStyle) {
     this.email = email;
     this.name = name;
     this.role = role;
     this.provider = provider;
+    this.investmentStyle = investmentStyle;
   }
 
   // 소셜 로그인 시 정보 업데이트를 위한 메서드
   public User update(String name) {
     this.name = name;
     return this;
+  }
+
+  // 투자 성향 수정 메서드 (회원 정보 수정 시 사용)
+  public void updateInvestmentStyle(InvestmentStyle style) {
+    this.investmentStyle = style;
   }
 
   public String getRoleKey() {
