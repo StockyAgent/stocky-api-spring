@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "watchlists",
+@Table(name = "watch_lists",
     // 유저 ID + 주식 ID 조합은 유니크해야 함 (한 사람이 같은 주식 중복 구독 불가)
     uniqueConstraints = {
         @UniqueConstraint(

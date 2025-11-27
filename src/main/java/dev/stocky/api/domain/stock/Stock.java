@@ -36,4 +36,11 @@ public class Stock extends BaseTimeEntity {
     this.name = name;
   }
 
+  // 이름 변경 감지 (Dirty Checking)
+  public void updateName(String name) {
+    if (name != null && !this.name.equals(name)) {
+      this.name = name;
+    }
+  }
+
 }

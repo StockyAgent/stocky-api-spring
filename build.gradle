@@ -24,6 +24,18 @@ repositories {
     mavenCentral()
 }
 
+// 1. 전역 변수로 버전 지정 (Spring Boot 3.x 호환 버전은 3.1.x 입니다)
+ext {
+    set('springCloudAwsVersion', "3.1.1")
+}
+
+// 2. Dependency Management에 AWS BOM 추가
+dependencyManagement {
+    imports {
+        mavenBom "io.awspring.cloud:spring-cloud-aws-dependencies:${springCloudAwsVersion}"
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -38,6 +50,10 @@ dependencies {
 
     // JWT 라이브러리 (jjwt)
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+
+    // AWS
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs' // SQS
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-ses' // SES
 
     compileOnly 'org.projectlombok:lombok'
 

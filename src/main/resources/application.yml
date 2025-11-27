@@ -3,6 +3,18 @@ spring:
   application:
     name: stocky-api-spring
 
+  # AWS 설정
+  cloud:
+    aws:
+      credentials:
+        # .env 파일에 적힌 값을 가져옵니다
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -40,3 +52,8 @@ app:
     secure: false       # 로컬은 http니까 false
     same-site: "Lax"    # 로컬은 같은 도메인(localhost)끼리라 Lax면 충분
     refresh-token-expiration: 1209600000 # 14일
+  sqs:
+    queue:
+      regular-request: "stocky-regular-request-queue"
+      regular-response: "stocky-regular-response-queue"
+      urgent-alert: "stocky-urgent-alert-queue"
