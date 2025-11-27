@@ -11,5 +11,5 @@ import lombok.ToString;
 public class RegularAnalysisResultDto {
 
   private Long userId;           // 유저 아이디 (누구 건지 식별용)
-  private List<ReportBody> reports; // 리포트 객체 리스트
+  private List<ReportDto> reports; // 리포트 객체 리스트
 }
