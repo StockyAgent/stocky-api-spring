@@ -11,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ReportBody {
+public class ReportDto {
 
   private String figi;    // 주식 식별자
   private String content; // 리포트 내용 (요약, 분석 등)
