@@ -3,6 +3,18 @@ spring:
   application:
     name: stocky-api-spring
 
+  # AWS 설정
+  cloud:
+    aws:
+      credentials:
+        # .env 파일에 적힌 값을 가져옵니다
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -31,18 +43,6 @@ jwt:
   access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}      # 1시간 (밀리초)
   refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}  # 14일 (밀리초)
 
-# AWS 설정
-cloud:
-  aws:
-    credentials:
-      # .env 파일에 적힌 값을 가져옵니다
-      access-key: ${AWS_ACCESS_KEY_ID}
-      secret-key: ${AWS_SECRET_ACCESS_KEY}
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
-
 # 커스텀 앱 설정
 app:
   cors:
@@ -54,7 +54,6 @@ app:
     refresh-token-expiration: 1209600000 # 14일
   sqs:
     queue:
-      # 큐 이름도 환경변수로 빼도 좋지만, 개발/운영 분리가 되어 있다면 하드코딩도 괜찮습니다.
       regular-request: "stocky-regular-request-queue"
       regular-response: "stocky-regular-response-queue"
       urgent-alert: "stocky-urgent-alert-queue"
