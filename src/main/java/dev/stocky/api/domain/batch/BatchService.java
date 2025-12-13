@@ -28,11 +28,7 @@ public class BatchService {
 
     for (User user : users) {
       // 1. 유저의 관심 종목(Symbol) 조회
-      // (WatchListRepository에 findStockSymbolsByUserId 메서드가 필요할 수 있음)
-      // 여기서는 개념적으로 작성
-      List<String> symbols = watchListRepository.findAllByUser(user).stream()
-          .map(watchList -> watchList.getStock().getSymbol())
-          .collect(Collectors.toList());
+      List<String> symbols = watchListRepository.findSymbolsByUser(user);
 
       if (symbols.isEmpty()) { // TODO: 관심 종목이 없는 경우 처리 방안
         continue;

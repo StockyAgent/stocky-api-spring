@@ -16,4 +16,7 @@ public interface WatchListRepository extends JpaRepository<WatchList, Long> {
 
   @Query("select distinct u from WatchList wl join wl.user u where wl.stock.symbol = :symbol")
   List<User> findAllUsersBySymbol(@Param("symbol") String symbol); // 특정 종목을 관심 목록에 추가한 모든 유저 조회
+
+  @Query("select s.symbol from WatchList wl join wl.stock s where wl.user = :user")
+  List<String> findSymbolsByUser(@Param("user") User user);
 }
