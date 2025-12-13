@@ -23,7 +23,7 @@ public class BatchService {
 
   @Transactional(readOnly = true)
   public int dispatchRegularReportEmail() {
-    List<User> users = userRepository.findAll();
+    List<User> users = userRepository.findAll(); // TODO: 활성 유저만 조회하도록 수정 가능, 페이징 처리 고려
     int count = 0;
 
     log.info("📢 정기 리포트 배치 시작. 대상 유저 수: {}", users.size());

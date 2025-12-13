@@ -73,3 +73,5 @@ app:
       urgent-alert: "stocky-urgent-alert-queue"
   email:
     sender: ${SENDER_EMAIL}
+  batch:
+    key: ${BATCH_KEY}
