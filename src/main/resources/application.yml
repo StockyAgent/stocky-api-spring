@@ -25,6 +25,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
 
   security:
     oauth2:
@@ -36,6 +40,20 @@ spring:
             scope:
               - email
               - profile
+  mail:
+    host: email-smtp.ap-northeast-2.amazonaws.com # 서울 리전 기준
+    port: 587
+    username: ${SES_SMTP_USERNAME} # 아까 발급받은 SMTP Username
+    password: ${SES_SMTP_PASSWORD} # 아까 발급받은 SMTP Password
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true # 필수: 암호화 통신 사용
+            required: true
 
 # JWT 설정 (커스텀 설정)
 jwt:
@@ -57,3 +75,7 @@ app:
       regular-request: "stocky-regular-request-queue"
       regular-response: "stocky-regular-response-queue"
       urgent-alert: "stocky-urgent-alert-queue"
+  email:
+    sender: ${SENDER_EMAIL}
+  batch:
+    key: ${BATCH_KEY}

@@ -1,0 +1,76 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ] # main 브랜치에 푸시되면 실행
+
+jobs:
+  # 1. 빌드하고 Docker Hub에 올리는 작업
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto' # AWS Corretto 사용
+
+      # 환경변수 파일 생성 (테스트 통과를 위해 필요할 수 있음)
+      - name: Make application.yml (or .env)
+        run: |
+          touch .env
+          echo "${{ secrets.ENV_VARS }}" > .env
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          # 태그: latest와 현재 커밋 해시값(버전 관리용) 두 개를 붙임
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
+            ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ github.sha }}
+
+  # 2. EC2에 배포하는 작업 (EC2 생성 후 주석 해제 예정)
+  deploy:
+    needs: build-and-push # 빌드가 성공해야 실행됨
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}       # EC2 IP 주소 (아직 없음)
+          username: ubuntu                    # EC2 기본 유저
+          key: ${{ secrets.EC2_KEY }}         # EC2 접속 키 (pem 파일 내용)
+          script: |
+            # 1. Docker Hub 로그인
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            
+            # 2. 최신 이미지 다운로드 (Pull)
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
+            
+            # 3. 기존 컨테이너 중지 및 삭제 (있다면)
+            sudo docker stop stocky-api || true
+            sudo docker rm stocky-api || true
+            
+            # 4. .env 파일 생성 (Github Secret 내용을 서버에 덮어쓰기)
+            echo "${{ secrets.ENV_VARS }}" > .env
+            
+            # 5. 새 컨테이너 실행 (docker run)
+            # 주의: -p 80:8080 (외부 80포트를 내부 8080으로 연결)
+            sudo docker run -d --name stocky-api \
+              --env-file .env \
+              -p 80:8080 \
+              ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
+            
+            # 6. 미사용 이미지 정리
+            sudo docker image prune -f

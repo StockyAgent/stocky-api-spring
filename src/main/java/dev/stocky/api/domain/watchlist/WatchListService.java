@@ -47,11 +47,15 @@ public class WatchListService {
       Stock stock = stockRepository.findByFigi(item.getFigi())
           .orElseGet(() -> stockRepository.save(Stock.builder()
               .figi(item.getFigi())
+              .symbol(item.getSymbol())
               .name(item.getName())
               .build()));
 
-      // [중요] Dirty Checking: 프론트에서 온 이름이 최신이면 DB 업데이트
-      stock.updateName(item.getName());
+      // [중요] Dirty Checking: 프론트에서 온 이름, 심볼이 최신이면 DB 업데이트 TODO: 성능 이슈, 유효 이름/심볼 검증 필요
+      if (!stock.getName().equals(item.getName()) ||
+          !stock.getSymbol().equals(item.getSymbol())) {
+        stock.update(item.getName(), item.getSymbol());
+      }
 
       targetStocks.add(stock);
     }
@@ -82,7 +86,7 @@ public class WatchListService {
   // 내 관심 종목 조회
   public WatchListResponseDto getWatchlist(String email) {
     User user = findUserByEmail(email);
-    
+
     List<WatchListDto> items = watchListRepository.findAllByUser(user).stream()
         .map(WatchListDto::new)
         .collect(Collectors.toList());

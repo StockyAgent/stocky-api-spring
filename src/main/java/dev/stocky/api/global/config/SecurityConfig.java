@@ -1,6 +1,5 @@
 package dev.stocky.api.global.config;
 
-import dev.stocky.api.domain.user.Role;
 import dev.stocky.api.global.jwt.JwtAuthenticationFilter;
 import dev.stocky.api.global.jwt.JwtTokenProvider;
 import dev.stocky.api.global.oauth2.CustomOAuth2UserService;
@@ -43,6 +42,12 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers("/login/**", "/oauth2/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html"
+                ).permitAll() // ✅ Swagger 관련 경로 허용
+                .requestMatchers("/api/batch/**").permitAll() // 배치 작업용 엔드포인트 허용
 //            .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name()) // 관리자 권한이 필요한 경로 예시
                 .anyRequest().authenticated()
         )

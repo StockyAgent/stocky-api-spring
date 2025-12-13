@@ -7,4 +7,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 
   Optional<Stock> findByFigi(String figi); // figi로 조회
 
+  Optional<Stock> findBySymbol(String symbol); // symbol로 조회
+
 }
