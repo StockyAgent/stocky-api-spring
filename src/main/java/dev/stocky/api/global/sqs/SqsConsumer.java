@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SqsConsumer {
+public class SqsConsumer { // TODO: 실패 처리 로직 추가 및 테스트 필요
 
   private final ReportService reportService;
 
