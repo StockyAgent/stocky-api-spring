@@ -23,6 +23,11 @@ public class SqsConsumer { // TODO: 실패 처리 로직 추가 및 테스트 �
       maxMessagesPerPoll = "1"
   )
   public void receiveRegularResult(RegularAnalysisResultDto resultDto) {
+    if (resultDto.getReports().isEmpty()) {
+      log.warn("⚠️ SQS 수신 [Regular Result]: userId={} - 보고서 없음", resultDto.getUserId());
+      return;
+    }
+
     log.info("📩 SQS 수신 [Regular Result]: userId={}, reportCount={}",
         resultDto.getUserId(), resultDto.getReports().size());
 
