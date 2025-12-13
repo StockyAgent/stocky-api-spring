@@ -17,7 +17,11 @@ public class SqsConsumer { // TODO: 실패 처리 로직 추가 및 테스트 �
 
   // 1. 정기 리포트 결과 수신
   // 할당 스레드 수로 우선순위가 있는 것처럼 보이게 설정
-  @SqsListener(value = "${app.sqs.queue.regular-response}", maxConcurrentMessages = "1")
+  @SqsListener(
+      value = "${app.sqs.queue.regular-response}",
+      maxConcurrentMessages = "1",
+      maxMessagesPerPoll = "1"
+  )
   public void receiveRegularResult(RegularAnalysisResultDto resultDto) {
     log.info("📩 SQS 수신 [Regular Result]: userId={}, reportCount={}",
         resultDto.getUserId(), resultDto.getReports().size());
@@ -27,7 +31,11 @@ public class SqsConsumer { // TODO: 실패 처리 로직 추가 및 테스트 �
   }
 
   // 2. 긴급 뉴스 알림 수신
-  @SqsListener(value = "${app.sqs.queue.urgent-alert}", maxConcurrentMessages = "5")
+  @SqsListener(
+      value = "${app.sqs.queue.urgent-alert}",
+      maxConcurrentMessages = "5",
+      maxMessagesPerPoll = "5"
+  )
   public void receiveUrgentAlert(ReportDto resultDto) {
     log.info("🚨 SQS 수신 [Urgent Alert]: symbol={}", resultDto.getSymbol());
 
