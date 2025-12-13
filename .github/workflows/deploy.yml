@@ -2,10 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main", "deploy" ] # 둘 다 감지하지만, 동작은 다르게 함
+    branches: [ "main", "develop" ] # 딱 두 개만 관리!
 
 jobs:
-  # 1. 빌드 및 푸시 (공통이지만 태그가 다름)
   build-and-push:
     runs-on: ubuntu-latest
     steps:
@@ -29,18 +28,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 여기가 핵심! 브랜치에 따라 태그를 다르게 설정
       - name: Docker Meta
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}
           tags: |
-            # main 브랜치일 때 -> latest 태그
+            # main -> latest 태그
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-            # deploy 브랜치일 때 -> dev 태그
-            type=raw,value=dev,enable=${{ github.ref == 'refs/heads/deploy' }}
-            # (선택) 커밋 해시값은 항상 붙임 (버전 추적용)
+            # develop -> develop 태그
+            type=raw,value=develop,enable=${{ github.ref == 'refs/heads/develop' }}
+            # 커밋 해시 (버전 추적용)
             type=sha
 
       - name: Build and Push Docker Image
@@ -48,12 +46,12 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }} # 위에서 만든 태그 적용
+          tags: ${{ steps.meta.outputs.tags }}
 
-  # 2. 배포 (오직 main 브랜치일 때만 실행!)
+  # 배포는 오직 main 브랜치일 때만!
   deploy:
     needs: build-and-push
-    if: github.ref == 'refs/heads/main' # 🚨 안전장치: main 아니면 실행 안 함
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to EC2
