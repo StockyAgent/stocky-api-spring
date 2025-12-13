@@ -23,7 +23,7 @@ public class EmailService {
 
   // application.yml 등에 발신자 이메일 설정해두면 좋음 (여기선 하드코딩 or Value)
   // 반드시 AWS SES에서 인증된 이메일이어야 함
-  @Value("${app.email.sender:noreply@stocky.dev}")
+  @Value("${app.email.sender}")
   private String senderEmail;
 
   /**
