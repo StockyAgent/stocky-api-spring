@@ -3,6 +3,8 @@ package dev.stocky.api.domain.watchlist;
 import dev.stocky.api.domain.user.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface WatchListRepository extends JpaRepository<WatchList, Long> {
 
@@ -10,4 +12,7 @@ public interface WatchListRepository extends JpaRepository<WatchList, Long> {
 
   void deleteAllByUser(User user); // 유저의 모든 관심 목록 삭제
 
+  // 수정된 Repository 코드
+  @Query("select distinct u from WatchList wl join fetch wl.user u where wl.stock.symbol = :symbol")
+  List<User> findAllUsersBySymbol(@Param("symbol") String symbol);
 }

@@ -27,36 +27,53 @@ public class EmailService {
   private String senderEmail;
 
   /**
-   * 정기 리포트 이메일 발송
+   * 이메일 발송 로직
    */
-  public void sendRegularReportEmail(String toEmail, Long userId, List<ReportDto> reports) {
-    log.info("📧 이메일 발송 시작: to={}, count={}", toEmail, reports.size());
-
+  private String sendEmail(String toEmail, String subject, String templateName, Context context) {
     try {
       MimeMessage message = javaMailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-      // 1. 기본 정보 설정
+      // 기본 정보 설정
       helper.setFrom(senderEmail);
       helper.setTo(toEmail);
-      helper.setSubject("[Stocky] 오늘의 주식 분석 리포트가 도착했습니다! 📈");
+      helper.setSubject(subject);
 
-      // 2. Thymeleaf 템플릿에 데이터 주입
-      Context context = new Context();
-      context.setVariable("userId", userId);
-      context.setVariable("reports", reports);
-
-      // 3. HTML 렌더링
-      String htmlContent = templateEngine.process("regular-report", context);
+      // HTML 렌더링
+      String htmlContent = templateEngine.process(templateName, context);
       helper.setText(htmlContent, true); // true = HTML 모드
 
-      // 4. 발송
       javaMailSender.send(message);
-      log.info("✅ 이메일 발송 성공!");
+      log.info("✅ 이메일 발송 성공: to={}", toEmail);
+
+      return htmlContent; // 발송된 이메일 본문 반환
 
     } catch (MessagingException e) {
-      log.error("❌ 이메일 발송 실패: {}", e.getMessage());
+      log.error("❌ 이메일 발송 실패: to={}, error={}", toEmail, e.getMessage());
       throw new RuntimeException(e);
     }
+  }
+
+  /**
+   * 정기 리포트 이메일 발송
+   */
+  public String sendRegularReportEmail(String toEmail, Long userId, List<ReportDto> reports) {
+    Context context = new Context();
+    context.setVariable("reports", reports);
+
+    // 템플릿: regular-report.html
+    return sendEmail(toEmail, "[Stocky] 오늘의 주식 리포트", "regular-report", context);
+  }
+
+  /**
+   * 긴급 리포트 이메일 발송
+   */
+  public String sendUrgentReportEmail(String toEmail, ReportDto report) {
+    Context context = new Context();
+    context.setVariable("report", report);
+
+    // 템플릿: urgent-report.html
+    // TODO: urgent-report 템플릿 작성 필요
+    return sendEmail(toEmail, "[Stocky] 긴급 뉴스 알림: " + report.getSymbol(), "urgent-report", context);
   }
 }
