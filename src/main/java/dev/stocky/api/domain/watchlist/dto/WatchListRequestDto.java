@@ -16,6 +16,7 @@ public class WatchListRequestDto {
   public static class StockItem {
 
     private String figi;
+    private String symbol;
     private String name;
   }
 

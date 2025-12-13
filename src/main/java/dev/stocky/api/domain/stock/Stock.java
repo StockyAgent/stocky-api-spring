@@ -26,21 +26,25 @@ public class Stock extends BaseTimeEntity {
   @Column(nullable = false, unique = true)
   private String figi;
 
+  // symbol 컬럼 추가 (예: AAPL, TSLA 등)
+  @Column(nullable = false, unique = true)
+  private String symbol;
+
   // 종목 이름
   @Column(nullable = false)
   private String name;
 
   @Builder
-  public Stock(String figi, String name) {
+  public Stock(String figi, String symbol, String name) {
     this.figi = figi;
+    this.symbol = symbol;
     this.name = name;
   }
 
-  // 이름 변경 감지 (Dirty Checking)
-  public void updateName(String name) {
-    if (name != null && !this.name.equals(name)) {
-      this.name = name;
-    }
+  // 이름, 심볼 변경
+  public void update(String name, String symbol) {
+    this.name = name;
+    this.symbol = symbol;
   }
 
 }
