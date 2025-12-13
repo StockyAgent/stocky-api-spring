@@ -57,3 +57,5 @@ app:
       regular-request: "stocky-regular-request-queue"
       regular-response: "stocky-regular-response-queue"
       urgent-alert: "stocky-urgent-alert-queue"
+  email:
+    sender: ${SENDER_EMAIL}

@@ -28,7 +28,7 @@ public class SqsConsumer {
   // 2. 긴급 뉴스 알림 수신
   @SqsListener("${app.sqs.queue.urgent-alert}")
   public void receiveUrgentAlert(ReportDto resultDto) {
-    log.info("🚨 SQS 수신 [Urgent Alert]: figi={}", resultDto.getFigi());
+    log.info("🚨 SQS 수신 [Urgent Alert]: symbol={}", resultDto.getSymbol());
 
     // 구독자 조회 및 단체 발송 로직 호출
     reportService.processUrgentReport(resultDto);

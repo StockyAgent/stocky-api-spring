@@ -13,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class ReportDto {
 
-  private String figi;    // 주식 식별자
+  private String symbol;    // 주식 심볼
   private String content; // 리포트 내용 (요약, 분석 등)
 }
