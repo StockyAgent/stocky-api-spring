@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface WatchListRepository extends JpaRepository<WatchList, Long> {
 
   List<WatchList> findAllByUser(User user); // 내 관심 목록 조회

@@ -6,7 +6,6 @@ import dev.stocky.api.domain.user.UserRepository;
 import dev.stocky.api.domain.watchlist.WatchListRepository;
 import dev.stocky.api.global.sqs.SqsSender;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

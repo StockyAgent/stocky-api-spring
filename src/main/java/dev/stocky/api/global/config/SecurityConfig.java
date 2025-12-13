@@ -1,6 +1,5 @@
 package dev.stocky.api.global.config;
 
-import dev.stocky.api.domain.user.Role;
 import dev.stocky.api.global.jwt.JwtAuthenticationFilter;
 import dev.stocky.api.global.jwt.JwtTokenProvider;
 import dev.stocky.api.global.oauth2.CustomOAuth2UserService;
