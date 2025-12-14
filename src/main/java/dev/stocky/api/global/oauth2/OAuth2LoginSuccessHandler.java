@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -24,8 +25,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
   private final JwtTokenProvider jwtTokenProvider;
   private final CookieUtil cookieUtil;
 
-  // 프론트엔드 리다이렉트 URI (todo: 나중에 application.yml 또는 application-prod.yml에서 가져오도록 리팩토링)
-  private static final String REDIRECT_URI = "http://localhost:3000/oauth/callback";
+  @Value("${app.oauth2.redirect-uri}")
+  private String REDIRECT_URI;
 
   @Override
   public void onAuthenticationSuccess(
