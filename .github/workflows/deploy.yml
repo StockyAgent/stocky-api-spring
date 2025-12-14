@@ -77,7 +77,7 @@ jobs:
             # 5. 새 컨테이너 실행 (RDS 연결 버전 - 네트워크 옵션 삭제됨!)
             sudo docker run -d --name stocky-api \
               --env-file .env \
-              -p 80:8080 \
+              -p 8080:8080 \
               ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
             
             # 6. 청소
