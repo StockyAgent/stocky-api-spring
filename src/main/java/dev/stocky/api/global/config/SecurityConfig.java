@@ -70,7 +70,8 @@ public class SecurityConfig {
     // 접근을 허용할 도메인 목록 todo: 추후 배포 시 yml로 주소 관리
     config.setAllowedOrigins(List.of(
         "http://localhost:3000", // 로컬 테스트용 (React/Next.js 기본 포트)
-        "https://stockydev.tech", "https://www.stockydev.tech" // 실제 서비스 도메인
+        "https://stockydev.tech", "https://www.stockydev.tech", // 실제 서비스 도메인
+        "https://api.stockydev.tech" // 실제 API 도메인
     ));
 
     // 허용할 HTTP 메서드
