@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main", "develop" ] # 딱 두 개만 관리!
+    branches: [ "main", "develop" ]
 
 jobs:
   build-and-push:
@@ -17,10 +17,13 @@ jobs:
           java-version: '21'
           distribution: 'corretto'
 
-      - name: Make application.yml
+      # Spring Boot 빌드 (ENV_VARS를 사용하여 application.yml 등을 생성할 필요가 있다면 여기서 수행)
+      # 보통 빌드 단계에서는 테스트를 건너뛰거나 더미 설정으로 빌드하므로
+      # .env 생성 단계는 생략하거나 필요시 추가하세요.
+      - name: Build with Gradle
         run: |
-          touch .env
-          echo "${{ secrets.ENV_VARS }}" > .env
+          chmod +x gradlew
+          ./gradlew clean build -x test
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -34,11 +37,8 @@ jobs:
         with:
           images: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}
           tags: |
-            # main -> latest 태그
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-            # develop -> develop 태그
             type=raw,value=develop,enable=${{ github.ref == 'refs/heads/develop' }}
-            # 커밋 해시 (버전 추적용)
             type=sha
 
       - name: Build and Push Docker Image
@@ -48,37 +48,50 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
 
-  # 배포는 오직 main 브랜치일 때만!
   deploy:
     needs: build-and-push
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' # 배포는 main 브랜치만
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ vars.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_KEY }}
+          host: ${{ vars.EC2_HOST }}        # Organization Variable (IP)
+          username: ${{ secrets.EC2_USERNAME }} # Organization Secret (ubuntu)
+          key: ${{ secrets.SSH_PRIVATE_KEY }}   # Organization Secret (PEM Key)
           script: |
-            # 1. 도커 허브 로그인
+            # 1. 작업 폴더 생성 및 이동 (Spring 전용 방)
+            mkdir -p ~/apps/spring-backend
+            cd ~/apps/spring-backend
+            
+            # 2. 도커 허브 로그인 (Private 이미지일 경우 필수)
             sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             
-            # 2. 최신 이미지 받기
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
-            
-            # 3. 기존 컨테이너 멈추고 삭제 (에러 무시 || true)
-            sudo docker stop stocky-api || true
-            sudo docker rm stocky-api || true
-            
-            # 4. .env 파일 생성 (Github Secrets 내용으로 덮어쓰기)
+            # 3. .env 파일 생성 (Repository Secret 내용으로 덮어쓰기)
             echo "${{ secrets.ENV_VARS }}" > .env
             
-            # 5. 새 컨테이너 실행 (RDS 연결 버전 - 네트워크 옵션 삭제됨!)
-            sudo docker run -d --restart always --name stocky-api \
-              --env-file .env \
-              -p 8080:8080 \
-              ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
+            # 4. docker-compose.yml 파일 동적 생성
+            cat <<EOF > docker-compose.yml
+            version: '3.8'
+            services:
+              spring-api:
+                container_name: ${{ secrets.PROJECT_NAME }}
+                image: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:latest
+                restart: always
+                ports:
+                  - "8080:8080" # Spring 포트
+                env_file: .env
+                networks:
+                  - stocky-net
             
-            # 6. 청소
+            networks:
+              stocky-net:
+                external: true # 미리 만들어둔 공용 네트워크 사용
+            EOF
+            
+            # 5. 최신 이미지 Pull 및 컨테이너 재실행
+            sudo docker compose pull
+            sudo docker compose up -d
+            
+            # 6. 불필요한 이미지 청소
             sudo docker image prune -f
