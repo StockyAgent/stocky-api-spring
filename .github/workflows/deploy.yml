@@ -90,8 +90,8 @@ jobs:
             EOF
             
             # 5. 최신 이미지 Pull 및 컨테이너 재실행
-            sudo docker compose pull
-            sudo docker compose up -d
+            sudo docker-compose pull
+            sudo docker-compose up -d
             
             # 6. 불필요한 이미지 청소
             sudo docker image prune -f
