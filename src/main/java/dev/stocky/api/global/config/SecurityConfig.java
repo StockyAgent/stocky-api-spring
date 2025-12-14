@@ -47,7 +47,7 @@ public class SecurityConfig {
                     "/swagger-ui/**",
                     "/swagger-ui.html"
                 ).permitAll() // ✅ Swagger 관련 경로 허용
-                .requestMatchers("/api/batch/**").permitAll() // 배치 작업용 엔드포인트 허용
+                .requestMatchers("/api/batch/**").permitAll() // 배치 작업용 엔드포인트 허용 TODO: IP 제한 고려
 //            .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name()) // 관리자 권한이 필요한 경로 예시
                 .anyRequest().authenticated()
         )
@@ -70,8 +70,7 @@ public class SecurityConfig {
     // 접근을 허용할 도메인 목록 todo: 추후 배포 시 yml로 주소 관리
     config.setAllowedOrigins(List.of(
         "http://localhost:3000", // 로컬 테스트용 (React/Next.js 기본 포트)
-        "https://stocky.vercel.app", // (예시) 나중에 배포될 Vercel 주소
-        "https://dev.stocky.vercel.app" // (예시) 개발용 Vercel 주소
+        "https://stockydev.tech", "https://www.stockydev.tech" // 실제 서비스 도메인
     ));
 
     // 허용할 HTTP 메서드
