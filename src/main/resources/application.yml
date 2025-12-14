@@ -79,3 +79,5 @@ app:
     sender: ${SENDER_EMAIL}
   batch:
     key: ${BATCH_KEY}
+  oauth2:
+    redirect-uri: ${OAUTH2_REDIRECT_URI} # 프론트엔드 리다이렉트 URI
