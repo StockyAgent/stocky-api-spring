@@ -26,9 +26,8 @@ public class BatchController {
       return ResponseEntity.status(403).body("Forbidden: Invalid batch key");
     }
 
-    int count = batchService.dispatchRegularReportEmail();
-    return ResponseEntity.ok(
-        "Regular report email dispatch triggered. " + count + " Requests sent.");
+    batchService.dispatchRegularReportEmail();
+    return ResponseEntity.ok("Regular report email dispatch triggered");
   }
 
 }
