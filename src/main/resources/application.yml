@@ -88,6 +88,8 @@ app:
       urgent-alert: "stocky-urgent-alert-queue"
       deep-request: "stocky-deep-request-queue"
       deep-response: "stocky-deep-response-queue"
+      news-request: "stocky-news-request-queue"
+      regular-generation: "stocky-regular-generation-queue"
   email:
     sender: ${SENDER_EMAIL}
   batch:

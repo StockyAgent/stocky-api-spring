@@ -20,7 +20,7 @@ public class ReportController {
 
   @PostMapping("/deep")
   public ResponseEntity<String> requestDeepReport(@RequestBody DeepAnalysisRequestDto request) {
-    log.info("📢 [API Request] Deep Report 요청 수신: userId={}, symbol={}", request.getUserId(), request.getSymbol());
+    log.info("📢 [API Request] Deep Report 요청 수신: symbol={}", request.getSymbol());
     sqsSender.sendDeepRequest(request);
     return ResponseEntity.ok("Deep report request sent");
   }
