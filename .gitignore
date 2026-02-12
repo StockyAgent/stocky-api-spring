@@ -17,9 +17,7 @@ out/
 ### Environment & Sensitive Files ###
 .env
 *.env
-application-local.yml
 application-dev.yml
-application-prod.yml
 
 ### Database ###
 *.db
