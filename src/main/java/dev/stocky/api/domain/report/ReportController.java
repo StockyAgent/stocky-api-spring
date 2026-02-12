@@ -20,6 +20,9 @@ public class ReportController {
 
   @PostMapping("/deep")
   public ResponseEntity<String> requestDeepReport(@RequestBody DeepAnalysisRequestDto request) {
+    if (request.getSymbol() == null || request.getSymbol().isBlank()) {
+      return ResponseEntity.badRequest().body("symbol is required");
+    }
     log.info("📢 [API Request] Deep Report 요청 수신: symbol={}", request.getSymbol());
     sqsSender.sendDeepRequest(request);
     return ResponseEntity.ok("Deep report request sent");

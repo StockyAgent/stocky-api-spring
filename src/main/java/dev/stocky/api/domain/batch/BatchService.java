@@ -27,7 +27,7 @@ public class BatchService {
   }
 
   // 03:30 뉴스 수집 트리거 (심볼 기준)
-  @Scheduled(cron = "0 30 3 * * *")
+  @Scheduled(cron = "0 30 3 * * *", zone = "Asia/Seoul")
   public void triggerNewsCollection() {
     List<String> symbols = collectAllSymbols();
     if (symbols.isEmpty()) {
@@ -39,7 +39,7 @@ public class BatchService {
   }
 
   // 05:00 리포트 생성 요청 (심볼 기준)
-  @Scheduled(cron = "0 0 5 * * *")
+  @Scheduled(cron = "0 0 5 * * *", zone = "Asia/Seoul")
   public void triggerReportGeneration() {
     List<String> symbols = collectAllSymbols();
     if (symbols.isEmpty()) {
@@ -51,7 +51,7 @@ public class BatchService {
   }
 
   // 07:30 이메일 발송 (유저 기준 — Phase 0-D에서 구현 예정)
-  @Scheduled(cron = "0 30 7 * * *")
+  @Scheduled(cron = "0 30 7 * * *", zone = "Asia/Seoul")
   public void triggerEmailDelivery() {
     log.info("이메일 발송 스케줄러 실행 (Phase 0-D에서 구현 예정)");
     // TODO: Phase 0-D — DynamoDB 조회 → 유저별 심볼 매핑 → 이메일 발송

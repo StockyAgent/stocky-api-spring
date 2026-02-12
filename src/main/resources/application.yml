@@ -40,25 +40,11 @@ spring:
             scope:
               - email
               - profile
-#  mail:
-#    host: email-smtp.ap-northeast-2.amazonaws.com # 서울 리전 기준
-#    port: 587
-#    username: ${SES_SMTP_USERNAME} # 아까 발급받은 SMTP Username
-#    password: ${SES_SMTP_PASSWORD} # 아까 발급받은 SMTP Password
-#    properties:
-#      mail:
-#        transport:
-#          protocol: smtp
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true # 필수: 암호화 통신 사용
-#            required: true
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: "${GMAIL_USERNAME}"
-    password: "${GMAIL_PASSWORD}"
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
