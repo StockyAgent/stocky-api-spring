@@ -1,8 +1,7 @@
-package dev.stocky.api.global.oauth2;
+package dev.stocky.api.global.auth;
 
 import dev.stocky.api.domain.user.Role;
-import dev.stocky.api.global.jwt.JwtTokenProvider;
-import dev.stocky.api.global.util.CookieUtil;
+import dev.stocky.api.global.common.CookieUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

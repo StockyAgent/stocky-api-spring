@@ -1,4 +1,4 @@
-package dev.stocky.api.global.jwt;
+package dev.stocky.api.global.auth;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -100,6 +100,5 @@ public class JwtTokenProvider {
       return e.getClaims();
     }
   }
-
 
 }

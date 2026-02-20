@@ -2,7 +2,7 @@ package dev.stocky.api.domain.user;
 
 import dev.stocky.api.domain.user.dto.UserResponseDto;
 import dev.stocky.api.domain.user.dto.UserUpdateDto;
-import dev.stocky.api.global.util.CookieUtil;
+import dev.stocky.api.global.common.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

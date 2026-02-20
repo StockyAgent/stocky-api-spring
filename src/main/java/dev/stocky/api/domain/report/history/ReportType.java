@@ -1,4 +1,4 @@
-package dev.stocky.api.domain.report;
+package dev.stocky.api.domain.report.history;
 
 public enum ReportType {
   REGULAR, // 정기 리포트

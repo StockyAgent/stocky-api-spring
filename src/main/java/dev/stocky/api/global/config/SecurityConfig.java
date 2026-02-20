@@ -1,9 +1,9 @@
 package dev.stocky.api.global.config;
 
-import dev.stocky.api.global.jwt.JwtAuthenticationFilter;
-import dev.stocky.api.global.jwt.JwtTokenProvider;
-import dev.stocky.api.global.oauth2.CustomOAuth2UserService;
-import dev.stocky.api.global.oauth2.OAuth2LoginSuccessHandler;
+import dev.stocky.api.global.auth.CustomOAuth2UserService;
+import dev.stocky.api.global.auth.JwtAuthenticationFilter;
+import dev.stocky.api.global.auth.JwtTokenProvider;
+import dev.stocky.api.global.auth.OAuth2LoginSuccessHandler;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

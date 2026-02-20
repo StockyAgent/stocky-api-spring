@@ -1,6 +1,6 @@
 package dev.stocky.api.domain.stock;
 
-import dev.stocky.api.global.entity.BaseTimeEntity;
+import dev.stocky.api.global.common.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

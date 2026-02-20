@@ -1,4 +1,4 @@
-package dev.stocky.api.global.entity;
+package dev.stocky.api.global.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -21,5 +21,5 @@ public abstract class BaseTimeEntity {
   @LastModifiedDate
   @Column(nullable = false)
   private LocalDateTime updatedAt;
-  
+
 }

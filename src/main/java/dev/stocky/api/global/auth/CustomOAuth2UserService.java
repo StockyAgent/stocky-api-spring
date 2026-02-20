@@ -1,4 +1,4 @@
-package dev.stocky.api.global.oauth2;
+package dev.stocky.api.global.auth;
 
 import dev.stocky.api.domain.user.Role;
 import dev.stocky.api.domain.user.User;

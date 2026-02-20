@@ -1,4 +1,4 @@
-package dev.stocky.api.domain.report;
+package dev.stocky.api.domain.report.history;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

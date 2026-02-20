@@ -1,7 +1,7 @@
-package dev.stocky.api.domain.report;
+package dev.stocky.api.domain.report.history;
 
 import dev.stocky.api.domain.user.User;
-import dev.stocky.api.global.entity.BaseTimeEntity;
+import dev.stocky.api.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
