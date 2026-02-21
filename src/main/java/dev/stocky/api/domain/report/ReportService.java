@@ -110,23 +110,26 @@ public class ReportService {
     });
   }
 
-  // 사용자별로 관심 symbol 모으는 함수
+  // 사용자별로 관심 symbol 모으는 함수 (2-phase: 심볼 수집 → 객체 생성)
   private List<UserReportTarget> buildUserReportTargets() {
     List<UserSymbolDto> rows = watchListRepository.findAllUsersWithSymbols();
     if (rows.isEmpty()) {
       return List.of();
     }
-    // userId 기준으로 그룹화 (중복 제거)
-    Map<Long, UserReportTarget> targetMap = new HashMap<>();
+
+    Map<Long, List<String>> symbolMap = new HashMap<>();
+    Map<Long, User> userMap = new HashMap<>();
 
     for (UserSymbolDto row : rows) {
       User user = row.getUser();
-      targetMap.computeIfAbsent(user.getId(), id ->
-          new UserReportTarget(user, new ArrayList<>())
-      ).getSymbols().add(row.getSymbol());
+      userMap.putIfAbsent(user.getId(), user);
+      symbolMap.computeIfAbsent(user.getId(), id -> new ArrayList<>())
+          .add(row.getSymbol());
     }
 
-    return new ArrayList<>(targetMap.values());
+    return symbolMap.entrySet().stream()
+        .map(e -> new UserReportTarget(userMap.get(e.getKey()), e.getValue()))
+        .toList();
   }
 
   private boolean sendReportEmail(UserReportTarget target, Map<String, String> reportMap) {

@@ -47,6 +47,8 @@ public class FastApiReportQueryService implements ReportQueryService {
       return Collections.emptyMap();
     }
 
+    int totalReturned = response.getReports().size();
+
     Map<String, String> result = response.getReports().stream()
         .filter(item -> "COMPLETED".equals(item.getStatus()))
         .filter(item -> item.getContent() != null && !item.getContent().isBlank())
@@ -55,6 +57,12 @@ public class FastApiReportQueryService implements ReportQueryService {
             FastApiReportItem::getContent,
             (existing, duplicate) -> existing  // 중복 심볼은 첫 번째 값 유지
         ));
+
+    int filtered = totalReturned - result.size();
+    if (filtered > 0) {
+      log.debug("FastAPI 필터링: investType={}, 전체 {}개 중 {}개 제외 (PENDING/FAILED/empty)",
+          investType, totalReturned, filtered);
+    }
 
     log.info("FastAPI 리포트 조회 완료: investType={}, 요청 {}개, COMPLETED {}개",
         investType, symbols.size(), result.size());

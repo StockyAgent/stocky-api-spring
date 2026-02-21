@@ -1,11 +1,15 @@
 package dev.stocky.api.domain.report.dto;
 
+import dev.stocky.api.domain.user.InvestmentStyle;
 import dev.stocky.api.domain.user.User;
 import java.util.List;
 import lombok.Getter;
 
 @Getter
 public class UserReportTarget {
+
+  private static final String DEFAULT_INVEST_TYPE =
+      InvestmentStyle.INVESTOR.name().toLowerCase();
 
   private final User user;
   private final String investType;
@@ -15,7 +19,7 @@ public class UserReportTarget {
     this.user = user;
     this.investType = user.getInvestmentStyle() != null
         ? user.getInvestmentStyle().name().toLowerCase()
-        : "investor";
+        : DEFAULT_INVEST_TYPE;
     this.symbols = symbols;
   }
 
