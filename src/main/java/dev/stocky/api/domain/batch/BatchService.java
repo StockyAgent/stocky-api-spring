@@ -24,33 +24,45 @@ public class BatchService {
   }
 
   // 04:30 뉴스 수집 트리거 (심볼 기준)
-  @Scheduled(cron = "0 30 4 * * *")
+  @Scheduled(cron = "0 30 4 * * *", zone = "Asia/Seoul")
   public void triggerNewsCollection() {
-    List<String> symbols = collectAllSymbols();
-    if (symbols.isEmpty()) {
-      log.info("뉴스 수집 스킵: 관심 종목 없음");
-      return;
+    try {
+      List<String> symbols = collectAllSymbols();
+      if (symbols.isEmpty()) {
+        log.info("뉴스 수집 스킵: 관심 종목 없음");
+        return;
+      }
+      log.info("뉴스 수집 트리거 실행. 심볼 수: {}", symbols.size());
+      sqsSender.sendNewsCollectionRequest(symbols);
+    } catch (Exception e) {
+      log.error("뉴스 수집 스케줄러 실패", e);
     }
-    log.info("뉴스 수집 트리거 실행. 심볼 수: {}", symbols.size());
-    sqsSender.sendNewsCollectionRequest(symbols);
   }
 
   // 06:00 리포트 생성 요청 (심볼 기준)
-  @Scheduled(cron = "0 0 6 * * *")
+  @Scheduled(cron = "0 0 6 * * *", zone = "Asia/Seoul")
   public void triggerReportGeneration() {
-    List<String> symbols = collectAllSymbols();
-    if (symbols.isEmpty()) {
-      log.info("리포트 생성 스킵: 관심 종목 없음");
-      return;
+    try {
+      List<String> symbols = collectAllSymbols();
+      if (symbols.isEmpty()) {
+        log.info("리포트 생성 스킵: 관심 종목 없음");
+        return;
+      }
+      log.info("리포트 생성 트리거 실행. 심볼 수: {}", symbols.size());
+      sqsSender.sendRegularGenerationRequest(symbols);
+    } catch (Exception e) {
+      log.error("리포트 생성 스케줄러 실패", e);
     }
-    log.info("리포트 생성 트리거 실행. 심볼 수: {}", symbols.size());
-    sqsSender.sendRegularGenerationRequest(symbols);
   }
 
   // 08:30 이메일 발송 (유저 기준)
-  @Scheduled(cron = "0 30 8 * * *")
+  @Scheduled(cron = "0 30 8 * * *", zone = "Asia/Seoul")
   public void triggerEmailDelivery() {
-    log.info("이메일 발송 스케줄러 실행");
-    reportService.deliverDailyReportEmails();
+    try {
+      log.info("이메일 발송 스케줄러 실행");
+      reportService.deliverDailyReportEmails();
+    } catch (Exception e) {
+      log.error("이메일 발송 스케줄러 실패", e);
+    }
   }
 }
