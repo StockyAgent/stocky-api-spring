@@ -1,5 +1,6 @@
 package dev.stocky.api.global.sqs.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,5 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DeepAnalysisRequestDto {
 
+  @NotBlank(message = "symbol은 필수입니다")
   private String symbol;
 }
