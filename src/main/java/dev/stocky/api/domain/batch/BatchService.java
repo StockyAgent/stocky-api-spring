@@ -23,8 +23,8 @@ public class BatchService {
     return watchListRepository.findAllDistinctSymbols();
   }
 
-  // 04:30 뉴스 수집 트리거 (심볼 기준)
-  @Scheduled(cron = "0 30 4 * * *", zone = "Asia/Seoul")
+  // 03:30 뉴스 수집 트리거 (심볼 기준)
+  @Scheduled(cron = "0 30 3 * * *", zone = "Asia/Seoul")
   public void triggerNewsCollection() {
     try {
       List<String> symbols = collectAllSymbols();
@@ -39,8 +39,8 @@ public class BatchService {
     }
   }
 
-  // 06:00 리포트 생성 요청 (심볼 기준)
-  @Scheduled(cron = "0 0 6 * * *", zone = "Asia/Seoul")
+  // 05:00 리포트 생성 요청 (심볼 기준)
+  @Scheduled(cron = "0 0 5 * * *", zone = "Asia/Seoul")
   public void triggerReportGeneration() {
     try {
       List<String> symbols = collectAllSymbols();
@@ -55,8 +55,8 @@ public class BatchService {
     }
   }
 
-  // 08:30 이메일 발송 (유저 기준)
-  @Scheduled(cron = "0 30 8 * * *", zone = "Asia/Seoul")
+  // 07:30 이메일 발송 (유저 기준)
+  @Scheduled(cron = "0 30 7 * * *", zone = "Asia/Seoul")
   public void triggerEmailDelivery() {
     try {
       log.info("이메일 발송 스케줄러 실행");

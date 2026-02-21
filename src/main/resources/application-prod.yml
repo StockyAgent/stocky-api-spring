@@ -1,0 +1,15 @@
+spring:
+  mail:
+    host: email-smtp.ap-northeast-2.amazonaws.com
+    port: 587
+    username: ${SES_SMTP_USERNAME}
+    password: ${SES_SMTP_PASSWORD}
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
