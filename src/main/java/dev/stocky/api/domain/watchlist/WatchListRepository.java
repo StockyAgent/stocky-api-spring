@@ -1,6 +1,7 @@
 package dev.stocky.api.domain.watchlist;
 
 import dev.stocky.api.domain.user.User;
+import dev.stocky.api.domain.watchlist.dto.UserSymbolDto;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,7 @@ public interface WatchListRepository extends JpaRepository<WatchList, Long> {
 
   @Query("SELECT DISTINCT s.symbol FROM WatchList wl JOIN wl.stock s")
   List<String> findAllDistinctSymbols();
+
+  @Query("SELECT new dev.stocky.api.domain.watchlist.dto.UserSymbolDto(wl.user, s.symbol) FROM WatchList wl JOIN wl.stock s")
+  List<UserSymbolDto> findAllUsersWithSymbols();
 }

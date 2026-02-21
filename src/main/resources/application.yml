@@ -40,6 +40,31 @@ spring:
             scope:
               - email
               - profile
+#  mail:
+#    host: email-smtp.ap-northeast-2.amazonaws.com # 서울 리전 기준
+#    port: 587
+#    username: ${SES_SMTP_USERNAME} # 아까 발급받은 SMTP Username
+#    password: ${SES_SMTP_PASSWORD} # 아까 발급받은 SMTP Password
+#    properties:
+#      mail:
+#        transport:
+#          protocol: smtp
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true # 필수: 암호화 통신 사용
+#            required: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "${GMAIL_USERNAME}"
+    password: "${GMAIL_PASSWORD}"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 # JWT 설정 (커스텀 설정)
 jwt:
@@ -58,8 +83,6 @@ app:
     refresh-token-expiration: 1209600000 # 14일
   sqs:
     queue:
-      regular-request: "stocky-regular-request-queue"
-      regular-response: "stocky-regular-response-queue"
       urgent-alert: "stocky-urgent-alert-queue"
       deep-request: "stocky-deep-request-queue"
       deep-response: "stocky-deep-response-queue"
@@ -72,3 +95,4 @@ app:
   oauth2:
     redirect-uri: ${OAUTH2_REDIRECT_URI} # 프론트엔드 리다이렉트 URI
   ai-server-url: ${AI_SERVER_URL} # AI 서버 URL
+  ai-internal-api-key: ${AI_INTERNAL_API_KEY} # AI 내부 API Key

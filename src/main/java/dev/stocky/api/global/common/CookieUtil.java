@@ -1,4 +1,4 @@
-package dev.stocky.api.global.util;
+package dev.stocky.api.global.common;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;

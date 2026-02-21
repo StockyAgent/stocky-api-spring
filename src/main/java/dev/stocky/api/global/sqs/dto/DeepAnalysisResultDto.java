@@ -1,4 +1,4 @@
-package dev.stocky.api.domain.report.dto;
+package dev.stocky.api.global.sqs.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

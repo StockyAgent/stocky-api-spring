@@ -1,4 +1,4 @@
-package dev.stocky.api.domain.report;
+package dev.stocky.api.domain.report.history;
 
 public enum ReportStatus {
   PENDING, // 생성 중

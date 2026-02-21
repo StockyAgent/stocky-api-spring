@@ -1,4 +1,4 @@
-package dev.stocky.api.global.jwt;
+package dev.stocky.api.global.auth;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -20,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider jwtTokenProvider;
-
 
   @Override
   protected void doFilterInternal(

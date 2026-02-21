@@ -1,4 +1,4 @@
-package dev.stocky.api.domain.report.dto;
+package dev.stocky.api.global.fastapi.dto;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SymbolListRequestDto {
+public class FastApiBatchReportRequest {
 
   private List<String> symbols;
+  private String investmentStyle;
+  private String startDate;
+  private String endDate;
+  private String category;
 }

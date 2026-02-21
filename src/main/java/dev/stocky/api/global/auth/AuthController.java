@@ -1,9 +1,8 @@
-package dev.stocky.api.domain.auth;
+package dev.stocky.api.global.auth;
 
 import dev.stocky.api.domain.user.User;
 import dev.stocky.api.domain.user.UserRepository;
-import dev.stocky.api.global.jwt.JwtTokenProvider;
-import dev.stocky.api.global.util.CookieUtil;
+import dev.stocky.api.global.common.CookieUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -73,6 +72,5 @@ public class AuthController {
 
     return ResponseEntity.ok("로그아웃 되었습니다.");
   }
-
 
 }

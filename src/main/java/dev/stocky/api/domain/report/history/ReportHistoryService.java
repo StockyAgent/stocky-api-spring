@@ -1,4 +1,4 @@
-package dev.stocky.api.domain.report;
+package dev.stocky.api.domain.report.history;
 
 import dev.stocky.api.domain.user.User;
 import lombok.RequiredArgsConstructor;
