@@ -2,6 +2,7 @@ package dev.stocky.api.global.fastapi;
 
 import dev.stocky.api.global.fastapi.dto.FastApiBatchReportRequest;
 import dev.stocky.api.global.fastapi.dto.FastApiBatchReportResponse;
+import dev.stocky.api.global.fastapi.dto.FastApiDeepReportResponse;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestClient;
 public class FastApiReportClient {
 
   private static final String BATCH_LOOKUP_PATH = "/ai/api/report/reports/batch_lookup";
+  private static final String DEEP_REPORT_PATH = "/ai/api/report/deep/{symbol}";
   private static final String CATEGORY_DAILY = "DAILY";
   private static final int CONNECT_TIMEOUT_MS = 5_000;
   private static final int READ_TIMEOUT_MS = 30_000;
@@ -82,6 +84,23 @@ public class FastApiReportClient {
     } catch (Exception e) {
       log.error("FastAPI 리포트 조회 실패: symbols={}, error={}", symbols, e.getMessage(), e);
       return emptyResponse();
+    }
+  }
+
+  /**
+   * FastAPI 심층 리포트 단일 엔드포인트 호출.
+   *
+   * @return FastApiDeepReportResponse (status: DONE/PROCESSING/ACCEPTED)
+   */
+  public FastApiDeepReportResponse requestDeepReport(String symbol) {
+    try {
+      return restClient.post()
+          .uri(DEEP_REPORT_PATH, symbol)
+          .retrieve()
+          .body(FastApiDeepReportResponse.class);
+    } catch (Exception e) {
+      log.error("FastAPI 심층 리포트 요청 실패: symbol={}, error={}", symbol, e.getMessage(), e);
+      throw e;
     }
   }
 
