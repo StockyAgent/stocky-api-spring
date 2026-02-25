@@ -89,18 +89,30 @@ public class FastApiReportClient {
 
   /**
    * FastAPI 심층 리포트 단일 엔드포인트 호출.
+   * <p>FastAPI가 내부적으로 DynamoDB 캐시를 확인하여 DONE/PROCESSING/ACCEPTED 상태를 반환한다.
    *
-   * @return FastApiDeepReportResponse (status: DONE/PROCESSING/ACCEPTED)
+   * @param symbol 심층 리포트를 조회할 종목 심볼 (예: "AAPL", "TSLA")
+   * @return FastApiDeepReportResponse (오류 발생 시 status="ERROR" 응답 반환, null 아님)
    */
   public FastApiDeepReportResponse requestDeepReport(String symbol) {
+    log.debug("FastAPI 심층 리포트 요청: symbol={}", symbol);
+
     try {
-      return restClient.post()
+      FastApiDeepReportResponse response = restClient.post()
           .uri(DEEP_REPORT_PATH, symbol)
           .retrieve()
           .body(FastApiDeepReportResponse.class);
+
+      if (response == null) {
+        log.warn("FastAPI 심층 리포트 응답이 비어있음: symbol={}", symbol);
+        return new FastApiDeepReportResponse("ERROR", symbol, null, null, "AI 서버 응답이 비어있습니다");
+      }
+
+      log.debug("FastAPI 심층 리포트 응답 수신: symbol={}, status={}", symbol, response.getStatus());
+      return response;
     } catch (Exception e) {
       log.error("FastAPI 심층 리포트 요청 실패: symbol={}, error={}", symbol, e.getMessage(), e);
-      throw e;
+      return new FastApiDeepReportResponse("ERROR", symbol, null, null, "AI 서버 연결 실패");
     }
   }
 

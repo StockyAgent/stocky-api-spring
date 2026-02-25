@@ -31,26 +31,19 @@ public class ReportController {
   public ResponseEntity<FastApiDeepReportResponse> requestDeepReport(
       @PathVariable String symbol
   ) {
+    if (!symbol.matches("^[A-Za-z0-9._-]+$")) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid symbol format");
+    }
+
     log.info("📢 [API Request] Deep Report 요청 수신: symbol={}", symbol);
 
-    FastApiDeepReportResponse response;
-    try {
-      response = fastApiReportClient.requestDeepReport(symbol);
-    } catch (Exception e) {
-      log.error("심층 리포트 요청 실패: symbol={}", symbol, e);
-      return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-          .body(new FastApiDeepReportResponse(
-              "ERROR", symbol, null, null, "AI 서버 연결 실패"));
-    }
-
-    if (response == null) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(new FastApiDeepReportResponse(
-              "ERROR", symbol, null, null, "AI 서버 응답이 비어있습니다"));
-    }
+    FastApiDeepReportResponse response = fastApiReportClient.requestDeepReport(symbol);
 
     if ("DONE".equals(response.getStatus())) {
       return ResponseEntity.ok(response);
+    }
+    if ("ERROR".equals(response.getStatus())) {
+      return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
     }
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
   }
