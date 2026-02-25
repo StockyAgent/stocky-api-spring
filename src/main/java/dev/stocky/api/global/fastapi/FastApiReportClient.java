@@ -105,14 +105,22 @@ public class FastApiReportClient {
 
       if (response == null) {
         log.warn("FastAPI 심층 리포트 응답이 비어있음: symbol={}", symbol);
-        return new FastApiDeepReportResponse("ERROR", symbol, null, null, "AI 서버 응답이 비어있습니다");
+        return FastApiDeepReportResponse.builder()
+            .status("ERROR")
+            .symbol(symbol)
+            .message("AI 서버 응답이 비어있습니다")
+            .build();
       }
 
       log.debug("FastAPI 심층 리포트 응답 수신: symbol={}, status={}", symbol, response.getStatus());
       return response;
     } catch (Exception e) {
       log.error("FastAPI 심층 리포트 요청 실패: symbol={}, error={}", symbol, e.getMessage(), e);
-      return new FastApiDeepReportResponse("ERROR", symbol, null, null, "AI 서버 연결 실패");
+      return FastApiDeepReportResponse.builder()
+          .status("ERROR")
+          .symbol(symbol)
+          .message("AI 서버 연결 실패")
+          .build();
     }
   }
 

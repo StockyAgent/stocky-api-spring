@@ -38,14 +38,20 @@ public class ReportController {
     log.info("📢 [API Request] Deep Report 요청 수신: symbol={}", symbol);
 
     FastApiDeepReportResponse response = fastApiReportClient.requestDeepReport(symbol);
+    String status = response.getStatus();
 
-    if ("DONE".equals(response.getStatus())) {
+    if ("DONE".equals(status)) {
       return ResponseEntity.ok(response);
     }
-    if ("ERROR".equals(response.getStatus())) {
+    if ("PROCESSING".equals(status) || "ACCEPTED".equals(status)) {
+      return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+    }
+    if ("ERROR".equals(status)) {
       return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
     }
-    return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+
+    log.error("FastAPI 예상치 못한 status 수신: symbol={}, status={}", symbol, status);
+    return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(response);
   }
 
   // 배치 수동 트리거 — 개발자 전용 (BATCH_KEY 인증)
