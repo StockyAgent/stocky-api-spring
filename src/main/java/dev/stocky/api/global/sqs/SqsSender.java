@@ -1,6 +1,5 @@
 package dev.stocky.api.global.sqs;
 
-import dev.stocky.api.global.sqs.dto.DeepAnalysisRequestDto;
 import dev.stocky.api.global.sqs.dto.SymbolListRequestDto;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import java.util.List;
@@ -15,9 +14,6 @@ import org.springframework.stereotype.Service;
 public class SqsSender {
 
   private final SqsTemplate sqsTemplate;
-
-  @Value("${app.sqs.queue.deep-request}")
-  private String deepRequestQueue;
 
   @Value("${app.sqs.queue.news-request}")
   private String newsRequestQueue;
@@ -51,12 +47,4 @@ public class SqsSender {
         .payload(requestDto));
   }
 
-  // 심층 리포트 요청 전송
-  public void sendDeepRequest(DeepAnalysisRequestDto requestDto) {
-    log.info("🚀 SQS 전송 [Deep Request]: symbol={}", requestDto.getSymbol());
-
-    sqsTemplate.send(to -> to
-        .queue(deepRequestQueue)
-        .payload(requestDto));
-  }
 }
